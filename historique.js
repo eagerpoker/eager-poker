@@ -53,18 +53,35 @@ function boutonExport() {
   boite.appendChild(b);
 }
 
+function cellule(v) {
+  return '"' + String(v === undefined || v === null ? "" : v).replace(/"/g, '""') + '"';
+}
+
 async function exporter() {
   const m = document.getElementById("msg");
   try {
     const u = auth.currentUser;
     const ref = collection(db, "historique_mains");
     const snap = await getDocs(u.uid === ADMIN_UID ? ref : query(ref, where("uids", "array-contains", u.uid)));
-    const lignes = snap.docs.map(d => d.data()).sort((a, b) => a.finAt - b.finAt);
-    const blob = new Blob([JSON.stringify(lignes, null, 2)], { type: "application/json" });
+    const mains = snap.docs.map(d => d.data()).sort((a, b) => a.finAt - b.finAt);
+    const nom = (d, id) => (d.noms && d.noms[id]) || id;
+    const lignes = [["Date", "Table", "Joueurs", "Board", "Cartes montrées", "Pot", "Résultat"]];
+    mains.forEach(d => {
+      lignes.push([
+        new Date(d.finAt).toLocaleString("fr-FR"),
+        d.tableName || "",
+        (d.uids || []).map(x => nom(d, x)).join(", "),
+        (d.board || []).join(" "),
+        Object.keys(d.mains || {}).map(x => nom(d, x) + " : " + (d.mains[x] || []).join(" ")).join(" | "),
+        Object.values(d.mises || {}).reduce((a, b) => a + b, 0),
+        d.resultat || ""
+      ]);
+    });
+    const texte = "\uFEFF" + lignes.map(l => l.map(cellule).join(";")).join("\r\n");
     const a = document.createElement("a");
-    a.href = URL.createObjectURL(blob);
-    a.download = "historique-poker.json";
+    a.href = URL.createObjectURL(new Blob([texte], { type: "text/csv;charset=utf-8" }));
+    a.download = "historique-poker.csv";
     a.click();
-    if (m) m.textContent = lignes.length + " mains exportées.";
+    if (m) m.textContent = mains.length + " mains exportées.";
   } catch (e) { if (m) m.textContent = "Erreur : " + (e.code || e.message); }
 }
