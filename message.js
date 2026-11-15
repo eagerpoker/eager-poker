@@ -4,6 +4,7 @@ import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/
 import { getFirestore, doc, onSnapshot, setDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 import "./decor.js?v=1";
 import "./decor2.js?v=1";
+import "./cartes.js?v=1";
 
 const $ = id => document.getElementById(id);
 const msg = t => { const m = $("msg"); if (m) m.textContent = t; };
