@@ -53,8 +53,16 @@ function boutonExport() {
   boite.appendChild(b);
 }
 
-function cellule(v) {
-  return '"' + String(v === undefined || v === null ? "" : v).replace(/"/g, '""') + '"';
+
+function chargerXLSX() {
+  return new Promise((ok, ko) => {
+    if (window.XLSX) return ok(window.XLSX);
+    const s = document.createElement("script");
+    s.src = "https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js";
+    s.onload = () => ok(window.XLSX);
+    s.onerror = () => ko(new Error("chargement Excel impossible"));
+    document.head.appendChild(s);
+  });
 }
 
 async function exporter() {
@@ -77,11 +85,12 @@ async function exporter() {
         d.resultat || ""
       ]);
     });
-    const texte = "\uFEFF" + lignes.map(l => l.map(cellule).join(";")).join("\r\n");
-    const a = document.createElement("a");
-    a.href = URL.createObjectURL(new Blob([texte], { type: "text/csv;charset=utf-8" }));
-    a.download = "historique-poker.csv";
-    a.click();
+    const X = await chargerXLSX();
+    const ws = X.utils.aoa_to_sheet(lignes);
+    ws["!cols"] = [{ wch: 18 }, { wch: 18 }, { wch: 40 }, { wch: 22 }, { wch: 40 }, { wch: 8 }, { wch: 60 }];
+    const wb = X.utils.book_new();
+    X.utils.book_append_sheet(wb, ws, "Historique");
+    X.writeFile(wb, "historique-poker.xlsx");
     if (m) m.textContent = mains.length + " mains exportées.";
   } catch (e) { if (m) m.textContent = "Erreur : " + (e.code || e.message); }
 }
