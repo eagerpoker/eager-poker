@@ -2,6 +2,8 @@ import "./historique.js?v=3";
 import { getApps, getApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 import { getFirestore, doc, onSnapshot, setDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+import "./decor.js?v=1";
+import "./decor2.js?v=1";
 
 const $ = id => document.getElementById(id);
 const msg = t => { const m = $("msg"); if (m) m.textContent = t; };
