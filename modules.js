@@ -1,2 +1,2 @@
-["historique.js?v=3", "decor.js?v=1", "decor2.js?v=1", "fond.js?v=1", "cartes.js?v=1", "robots.js?v=1", "tablegrande.js?v=1", "boutons.js?v=1", "chat.js?v=1", "messages.js?v=1","chattable.js?v=1"]
+["historique.js?v=3", "decor.js?v=1", "decor2.js?v=1", "fond.js?v=1", "cartes.js?v=1", "robots.js?v=1", "tablegrande.js?v=1", "boutons.js?v=1", "chat.js?v=1", "messages.js?v=1","chattable.js?v=1","chattable.js?v=1"]
   .forEach(f => import("./" + f).catch(() => {}));
