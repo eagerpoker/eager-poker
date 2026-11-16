@@ -239,4 +239,11 @@ async function retirerPhoto(c) {
     msg("Photo retirée.");
   } catch (e) { msg("Erreur : " + (e.code || e.message)); }
   finally { occupe = false; }
-  }
+  }setInterval(() => {
+  cartes().forEach(c => {
+    const avec = !!c.querySelector(".photoTable");
+    [c.querySelector("h3"), c.querySelector(":scope > small"), c.querySelector(":scope > div")].forEach(x => {
+      if (x) x.style.paddingRight = avec ? "76px" : "";
+    });
+  });
+}, 500);
