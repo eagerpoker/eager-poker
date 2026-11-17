@@ -1,3 +1,4 @@
+import "./extras.js?v=1";
 import "./rendre.js?v=1";
 import("./modules.js?t=" + Date.now()).catch(() => {});
 import { getApps, getApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
