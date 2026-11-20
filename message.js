@@ -1,3 +1,4 @@
+import "./export.js?v=1";
 import "./extras.js?v=1";
 import "./rendre.js?v=1";
 import("./modules.js?t=" + Date.now()).catch(() => {});
